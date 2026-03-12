@@ -107,13 +107,3 @@ For quick testing, use the built-in PHP server:
 ```bash
 php artisan serve
 ```
-
-
-
-
-
-
-
-
-
-

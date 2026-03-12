@@ -1,5 +1,13 @@
 # Laravel Development
 
+## Table of Contents
+
+1. [Installation Steps](#seedersInstallation-Steps)
+2. [Creating a New Laravel Project](#Creating-a-New-Laravel-Project)
+
+---
+
+
 ## Installation Steps
 
 ### 1. Update System Packages
@@ -65,6 +73,40 @@ composer --version
 laravel --version
 ```
 
+
+
+
+## Creating a New Laravel Project
+
+### 1. Create Project
+
+```bash
+laravel new example-project
+```
+
+### Project Setup
+
+This project was initialized with the following configuration:
+
+-   **Starter Kit**: None
+-   **Testing Framework**: Pest
+-   **Database**: MySQL
+-   **Default Database Migration**: Applied
+-   **npm Install**: Executed
+
+### 2. Navigate to Project Directory
+
+```bash
+cd example-project
+```
+
+### 3. Run Development Server
+
+For quick testing, use the built-in PHP server:
+
+```bash
+php artisan serve
+```
 
 
 

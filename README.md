@@ -20,7 +20,7 @@ sudo apt install apache2
 sudo apt install php libapache2-mod-php php-cli php-mbstring php-xml php-bcmath php-json php-zip
 ```
 ### 4. Install Composer
-    **Download and install Composer:**
+**Download and install Composer:**
 
 ```bash
 sudo apt install curl unzip
@@ -42,20 +42,20 @@ composer global require laravel/installer
 nano ~/.bashrc
 ```
 
-   **Add the following line at the end of the file:**
+**Add the following line at the end of the file:**
 
 ```bash
 export PATH="$HOME/.config/composer/vendor/bin:$PATH"
 ```
 
-   **Save and exit, then reload the configuration:**
+Save and exit, then reload the configuration:
 
 ```bash
 source ~/.bashrc
 ```
 
 ### 7. Verify Installtion
-    **Check if Composer and Laravel are properly installed:**
+Check if Composer and Laravel are properly installed:
 
 ```bash
 composer --version

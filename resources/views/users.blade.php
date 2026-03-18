@@ -15,7 +15,7 @@
 
 <body>
 
-    <div class="container py-5">
+    <div class="container py-3">
 
         <div class="card">
             <div class="card-header">
@@ -44,6 +44,7 @@
                                 <th>Age</th>
                                 <th>Gender</th>
                                 <th>DOB</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -76,8 +77,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
 </script>
-<script src="https://code.jquery.com/jquery-4.0.0.min.js"
-    integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.datatables.net/2.3.7/js/dataTables.js"></script>
 
 <script type="text/javascript">
@@ -92,19 +92,62 @@
                     e.gender = $('#gender').val();
                 }
             },
-            columns: [
-                { data: 'id', name: 'id' },
-                { data: 'name', name: 'name' },
-                { data: 'email', name: 'email' },
-                { data: 'age', name: 'age' },
-                { data: 'gender', name: 'gender' },
-                { data: 'date_of_birth', name: 'date_of_birth' }
+            columns: [{
+                    data: 'id',
+                    name: 'id'
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'email',
+                    name: 'email'
+                },
+                {
+                    data: 'age',
+                    name: 'age'
+                },
+                {
+                    data: 'gender',
+                    name: 'gender'
+                },
+                {
+                    data: 'date_of_birth',
+                    name: 'date_of_birth'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                }
             ]
         });
 
         $('#gender').change(function() {
             table.draw();
         });
+
+
+        $(document).on('click', '.deleteBtn', function() {
+            let id = $(this).data('id');
+
+            if (confirm('Are you sure you want to delete this user?')) {
+                $.ajax({
+                    url: '/users/' + id,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function() {
+                        alert('User deleted successfully');
+                        $('.datatable').DataTable().ajax.reload();
+                    }
+                });
+            }
+        });
+
 
     });
 </script>

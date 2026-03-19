@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Jobs\SendMail;
+use App\Mail\WelcomeUserMail;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Mail;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,7 +25,17 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        // User::factory(200)->create();
+        // User::factory(10)->create();
+
+        // $users = User::factory()->count(10)->create();
+
+        // foreach ($users as $user) {
+        //     Mail::to($user->email)->queue(new WelcomeUserMail());
+        // }
+
+        User::factory(10)->create()->each(function ($user) {
+            SendMail::dispatch($user);
+        });
 
         // $this->call([
         //     UserSeeder::class,

@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Mail\WelcomeUserMail;
 use Illuminate\Support\Str;
 
 use App\Models\User;
@@ -19,9 +20,12 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        Mail::raw('you register , Please Login using Email,Password', function ($msg) use ($user) {
-            $msg->to($user->email)->subject('Register Successfully');
-        });
+        // Mail::raw('you register , Please Login using Email,Password', function ($msg) use ($user) {
+        //     $msg->to($user->email)->subject('Register Successfully');
+        // });
+
+        // Mail::to($user->email)->queue(new WelcomeUserMail());
+        
     }
 
     /**

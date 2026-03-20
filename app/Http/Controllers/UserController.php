@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
 
-    public function index(Request $request)
+    public function getUsers(Request $request)
     {
         if ($request->ajax()) {
 
@@ -50,6 +52,62 @@ class UserController extends Controller
     }
 
 
+    public function create()
+    {
+        return view('createuser');
+    }
+
+    public function store(Request $request)
+    {
+
+        $request->validate([
+            'userName' => 'required|string|max:255',
+            'userEmail' => 'required|email|max:255',
+            'userPassword' => 'required|string|min:8|max:255',
+            'userAge' => 'required|integer|min:10|max:50',
+            'userDateOfBirth' => 'required|date|before:2015-01-01',
+            'userGender' => 'required|in:male,female',
+            'userPercentage' => 'required|integer|min:0|max:100',
+            'userType' => 'required|in:teacher,student',
+        ], [
+            'userName.required' => 'User name is required',
+            'userEmail.required' => 'Email is required',
+            'userPassword.required' => 'Password is required',
+            'userAge.required' => 'Age is required',
+            'userAge.max' => 'Age must be under 50',
+            'userDateOfBirth.required' => 'Date of birth is required',
+            'userGender.required' => 'Gender is required',
+            'userPercentage.required' => 'Percentage is required',
+            'userType.required' => 'User type is required',
+        ]);
+
+
+        $user = new User();
+
+        $user->name = $request->userName;
+        $user->email = $request->userEmail;
+        $user->password = Hash::make($request->userPassword);
+        $user->age = $request->userAge;
+        $user->percentage = $request->userPercentage;
+        $user->date_of_birth = $request->userDateOfBirth;
+        $user->gender = $request->userGender;
+        $user->userType = $request->userType;
+
+        $user->save();
+
+        SendMail::dispatch($user);
+
+        session()->flash('success', 'user created successfully');
+
+
+
+
+        return redirect('/users');
+    }
+
+
+
+
     public function destroy($id)
     {
         $user = User::findOrFail($id);
@@ -68,14 +126,47 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->age = $request->age;
-        $user->gender = $request->gender;
-        $user->date_of_birth = $request->date_of_birth;
+        // ✅ Validation (same as store, with small changes)
+        $request->validate([
+            'userName' => 'required|string|max:255',
+            'userEmail' => 'required|email|max:255|unique:users,email,' . $id,
+            'userAge' => 'required|integer|min:10|max:50',
+            'userDateOfBirth' => 'required|date|before:2015-01-01',
+            'userGender' => 'required|in:male,female',
+            'userPercentage' => 'required|integer|min:0|max:100',
+            'userType' => 'required|in:teacher,student',
+        ], [
+            'userName.required' => 'User name is required',
+            'userEmail.required' => 'Email is required',
+            'userAge.required' => 'Age is required',
+            'userAge.max' => 'Age must be under 50',
+            'userDateOfBirth.required' => 'Date of birth is required',
+            'userGender.required' => 'Gender is required',
+            'userPercentage.required' => 'Percentage is required',
+            'userType.required' => 'User type is required',
+        ]);
+
+        // ✅ Update data
+        $user->name = $request->userName;
+        $user->email = $request->userEmail;
+        $user->age = $request->userAge;
+        $user->percentage = $request->userPercentage;
+        $user->date_of_birth = $request->userDateOfBirth;
+        $user->gender = $request->userGender;
+        $user->userType = $request->userType;
+
+        // ✅ Optional: update password only if filled
+        if ($request->filled('userPassword')) {
+            $request->validate([
+                'userPassword' => 'min:8|max:255'
+            ]);
+
+            $user->password = Hash::make($request->userPassword);
+        }
 
         $user->save();
 
-        return redirect()->route('users.index')->with('success', 'User updated successfully');
+        return redirect()->route('users.getUsers')
+            ->with('success', 'User updated successfully');
     }
 }

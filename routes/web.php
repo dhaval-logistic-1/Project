@@ -22,7 +22,21 @@ Route::middleware('auth')->group(function () {
 
 
 // Route::get('/users', [UserController::class, 'index'])->name('users.index');
-Route::resource('users', UserController::class);
+// Route::resource('users', UserController::class);
+
+
+Route::controller(UserController::class)->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/users',  'getUsers')->name('users.getUsers');
+
+    Route::get('/createUser', 'create')->name('users.create');
+    Route::post('/createUser', 'store')->name('users.store');
+   
+
+    Route::delete('/users/{id}', 'destroy')->name('users.destroy');
+    Route::get('/users/{id}/edit', 'edit')->name('users.edit');
+    Route::put('/users/{id}', 'update')->name('users.update');
+
+});
 
 
 require __DIR__.'/auth.php';

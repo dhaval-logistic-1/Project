@@ -18,9 +18,23 @@
     <div class="container py-3">
 
         <div class="card">
-            <div class="card-header">
-                <h5 class="title-header mb-0">Data Table in Laravel</h5>
+            <div class="card-header d-flex justify-content-between align-items-center">
+
+                <div>
+                    <h5 class="title-header mb-0">User List</h5>
+                </div>
+                <div>
+                    <a href="{{ route('users.create') }}" class="btn btn-primary">Add User</a>
+
+                </div>
+
             </div>
+
+            @if (session('success'))
+                <div class="alert alert-success m-3">
+                    {{ session('success') }}
+                </div>
+            @endif
 
             <div class="card-body">
 
@@ -87,7 +101,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ route('users.index') }}",
+                url: "{{ route('users.getUsers') }}",
                 data: function(e) {
                     e.gender = $('#gender').val();
                 }
